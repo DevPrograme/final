@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Core surfaces */
+    --background: 220 23% 97%;
+    --foreground: 224 24% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 24% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 24% 11%;
+
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 224 24% 11%;
+
+    /* Brand: indigo */
+    --primary: 243 75% 59%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 25% 95%;
+    --secondary-foreground: 243 35% 28%;
+
+    --muted: 220 16% 95%;
+    --muted-foreground: 222 12% 46%;
+
+    --accent: 243 70% 96%;
+    --accent-foreground: 243 75% 44%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 16% 90%;
+    --input: 220 16% 88%;
+    --ring: 243 75% 59%;
+
+    --radius: 0.9rem;
+
+    /* KnowVault accents */
+    --vault-lime: 75 85% 58%;
+    --vault-lime-foreground: 90 45% 12%;
+    --vault-positive: 160 84% 28%;
+    --vault-ink: 230 28% 8%;
+    --vault-ink-foreground: 220 30% 94%;
+    --vault-badge: 342 82% 58%;
+    --vault-rose: 353 88% 94%;
+    --vault-rose-foreground: 350 45% 32%;
+    --vault-sky: 205 90% 93%;
+    --vault-sky-foreground: 205 55% 28%;
+    --vault-moss: 82 55% 89%;
+    --vault-moss-foreground: 96 45% 22%;
+
+    --chart-bar: 243 75% 59%;
+    --chart-bar-muted: 240 35% 90%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  ::selection {
+    @apply bg-primary/15;
+  }
+}
+
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mask-fade-b {
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -117,3 +117,4 @@ This is a standard Next.js app, so it deploys as-is to Vercel or any Node
 host. Just make sure `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and
 `CLERK_SECRET_KEY` are set as environment variables in your hosting
 provider, and add your production domain in the Clerk dashboard.
+"# final" 

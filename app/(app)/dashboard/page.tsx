@@ -1,4 +1,3 @@
-import { currentUser } from "@clerk/nextjs/server";
 import { Flame } from "lucide-react";
 
 import { DashboardHero } from "@/components/shared/dashboard-hero";
@@ -7,28 +6,53 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { ResourceCard } from "@/components/shared/resource-card";
 import { KnowledgePulseChart } from "@/components/shared/knowledge-pulse-chart";
 import { EffectBanner } from "@/components/shared/effect-banner";
-import { getGreeting, formatLongDate } from "@/lib/utils";
+import { getGreeting, formatLongDate, formatCompactNumber } from "@/lib/utils";
+import { statCards, effectStats } from "@/lib/data";
 import {
-  statCards,
-  resources,
-  weeklyPulse,
-  weeklyPulseDelta,
-  effectStats,
-} from "@/lib/data";
+  getCurrentProfile,
+  getResources,
+  getStats,
+  getWeeklyPulse,
+} from "@/lib/queries";
+import type { StatCardData } from "@/lib/types";
 
 export default async function DashboardPage() {
-  const user = await currentUser();
+  const [profile, resources, stats, pulse] = await Promise.all([
+    getCurrentProfile(),
+    getResources({}, 3),
+    getStats(),
+    getWeeklyPulse(),
+  ]);
+
+  const firstName = profile?.full_name?.split(" ")[0] ?? null;
+
+  // Keep the designed icons/styles, fill in live values from the database.
+  const cards: StatCardData[] = statCards.map((card) => {
+    switch (card.id) {
+      case "projects-preserved":
+        return { ...card, value: formatCompactNumber(stats.projectsPreserved) };
+      case "active-contributors":
+        return {
+          ...card,
+          value: formatCompactNumber(stats.activeContributors),
+        };
+      case "knowledge-reused":
+        return { ...card, value: formatCompactNumber(stats.knowledgeReused) };
+      default:
+        return card;
+    }
+  });
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-10">
       <DashboardHero
         greeting={getGreeting()}
         dateLabel={formatLongDate()}
-        firstName={user?.firstName}
+        firstName={firstName}
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((stat) => (
+        {cards.map((stat) => (
           <StatCard key={stat.id} {...stat} />
         ))}
       </div>
@@ -45,7 +69,7 @@ export default async function DashboardPage() {
           {resources.map((resource) => (
             <ResourceCard key={resource.id} {...resource} />
           ))}
-          <KnowledgePulseChart data={weeklyPulse} deltaLabel={weeklyPulseDelta} />
+          <KnowledgePulseChart data={pulse.points} deltaLabel={pulse.delta} />
         </div>
       </div>
 

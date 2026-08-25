@@ -56,6 +56,58 @@
     --chart-bar: 243 75% 59%;
     --chart-bar-muted: 240 35% 90%;
   }
+
+  .dark {
+    /* Core surfaces */
+    --background: 224 32% 6%;
+    --foreground: 220 25% 92%;
+
+    --card: 224 27% 10%;
+    --card-foreground: 220 25% 92%;
+
+    --popover: 224 27% 10%;
+    --popover-foreground: 220 25% 92%;
+
+    --sidebar: 224 29% 8%;
+    --sidebar-foreground: 220 25% 92%;
+
+    /* Brand: indigo (lifted for contrast on dark) */
+    --primary: 243 80% 68%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 16% 18%;
+    --secondary-foreground: 240 30% 88%;
+
+    --muted: 224 18% 15%;
+    --muted-foreground: 220 12% 62%;
+
+    --accent: 243 42% 22%;
+    --accent-foreground: 243 80% 84%;
+
+    --destructive: 0 62% 52%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 224 16% 20%;
+    --input: 224 16% 22%;
+    --ring: 243 80% 68%;
+
+    /* KnowVault accents — tuned for dark surfaces */
+    --vault-lime: 75 80% 55%;
+    --vault-lime-foreground: 90 45% 12%;
+    --vault-positive: 160 68% 45%;
+    --vault-ink: 230 28% 8%;
+    --vault-ink-foreground: 220 30% 94%;
+    --vault-badge: 342 82% 62%;
+    --vault-rose: 350 38% 24%;
+    --vault-rose-foreground: 351 85% 88%;
+    --vault-sky: 205 52% 22%;
+    --vault-sky-foreground: 205 82% 86%;
+    --vault-moss: 96 32% 20%;
+    --vault-moss-foreground: 82 58% 82%;
+
+    --chart-bar: 243 80% 68%;
+    --chart-bar-muted: 240 18% 24%;
+  }
 }
 
 @layer base {

@@ -1,6 +1,4 @@
-import { Upload } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
+import { ShareResourceDialog } from "@/components/shared/share-resource-dialog";
 
 interface DashboardHeroProps {
   greeting: string;
@@ -22,10 +20,7 @@ export function DashboardHero({ greeting, dateLabel, firstName }: DashboardHeroP
           Your college&rsquo;s collective intelligence, in one place.
         </p>
       </div>
-      <Button size="lg" className="w-fit shrink-0">
-        <Upload />
-        Share knowledge
-      </Button>
+      <ShareResourceDialog />
     </div>
   );
 }

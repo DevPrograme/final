@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
 
 import "./globals.css";
+import { ThemeProvider } from "@/components/shared/theme-provider";
 
 const fontSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -26,19 +26,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      appearance={{
-        variables: {
-          colorPrimary: "#4F46E5",
-          borderRadius: "0.9rem",
-        },
-      }}
-    >
-      <html lang="en">
-        <body className={`${fontSans.variable} ${fontMono.variable} font-sans`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${fontSans.variable} ${fontMono.variable} font-sans`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+        >
           {children}
-        </body>
-      </html>
-    </ClerkProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

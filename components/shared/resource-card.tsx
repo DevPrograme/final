@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Bookmark, ArrowUpRight, Zap } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn, getInitials } from "@/lib/utils";
+import { toggleSave } from "@/lib/actions/resources";
 import type { Resource, ResourceCategory } from "@/lib/types";
 
 const categoryStyles: Record<ResourceCategory, string> = {
@@ -16,6 +17,7 @@ const categoryStyles: Record<ResourceCategory, string> = {
 };
 
 export function ResourceCard({
+  id,
   category,
   year,
   department,
@@ -27,6 +29,20 @@ export function ResourceCard({
   saved,
 }: Resource) {
   const [isSaved, setIsSaved] = useState(Boolean(saved));
+  const [isPending, startTransition] = useTransition();
+
+  function handleToggle() {
+    const next = !isSaved;
+    setIsSaved(next);
+    startTransition(async () => {
+      const result = await toggleSave(id);
+      if (result?.error) {
+        setIsSaved(!next);
+      } else if (typeof result?.saved === "boolean") {
+        setIsSaved(result.saved);
+      }
+    });
+  }
 
   return (
     <Card className="group flex flex-col overflow-hidden transition-shadow hover:shadow-card-hover">
@@ -39,10 +55,11 @@ export function ResourceCard({
         <span className="text-xs font-semibold">{category}</span>
         <button
           type="button"
-          onClick={() => setIsSaved((prev) => !prev)}
+          onClick={handleToggle}
+          disabled={isPending}
           aria-pressed={isSaved}
           aria-label={isSaved ? "Remove from saved" : "Save this resource"}
-          className="rounded-full bg-white/70 p-1.5 text-current transition-colors hover:bg-white"
+          className="rounded-full bg-white/70 p-1.5 text-current transition-colors hover:bg-white disabled:opacity-60"
         >
           <Bookmark
             className={cn("h-3.5 w-3.5", isSaved && "fill-current")}

@@ -1,10 +1,16 @@
 import Link from "next/link";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/shared/logo";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { createClient } from "@/lib/supabase/server";
 
-export function MarketingHeader() {
+export async function MarketingHeader() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <header className="sticky top-0 z-30 border-b border-border/70 bg-background/80 backdrop-blur">
       <div className="container flex h-16 items-center justify-between">
@@ -18,19 +24,21 @@ export function MarketingHeader() {
           </Link>
         </nav>
         <div className="flex items-center gap-2">
-          <SignedIn>
+          <ThemeToggle />
+          {user ? (
             <Button asChild size="sm">
               <Link href="/dashboard">Go to dashboard</Link>
             </Button>
-          </SignedIn>
-          <SignedOut>
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/sign-in">Sign in</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link href="/sign-up">Get started</Link>
-            </Button>
-          </SignedOut>
+          ) : (
+            <>
+              <Button asChild variant="ghost" size="sm">
+                <Link href="/sign-in">Sign in</Link>
+              </Button>
+              <Button asChild size="sm">
+                <Link href="/sign-up">Get started</Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>

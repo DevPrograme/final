@@ -1,8 +1,12 @@
 import { Target } from "lucide-react";
 
 import { EmptyState } from "@/components/shared/empty-state";
+import { ResourceGrid } from "@/components/shared/resource-grid";
+import { getResources } from "@/lib/queries";
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  const resources = await getResources({ category: "Projects" });
+
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-8">
       <div className="space-y-1.5">
@@ -13,13 +17,18 @@ export default function ProjectsPage() {
           Every preserved build, from final-year projects to weekend hacks.
         </p>
       </div>
-      <EmptyState
-        icon={Target}
-        title="Project filters aren't live yet"
-        description="Once this is wired up, you'll see every preserved project, like MediRoute or Placement OS, in one filterable list."
-        actionLabel="View on dashboard"
-        actionHref="/dashboard"
-      />
+
+      {resources.length === 0 ? (
+        <EmptyState
+          icon={Target}
+          title="No projects yet"
+          description="Once projects like MediRoute or Placement OS are shared, they'll show up here."
+          actionLabel="View on dashboard"
+          actionHref="/dashboard"
+        />
+      ) : (
+        <ResourceGrid resources={resources} />
+      )}
     </div>
   );
 }

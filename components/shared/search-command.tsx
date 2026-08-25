@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { navGroups } from "@/lib/nav-config";
-import { resources } from "@/lib/data";
+import { createClient } from "@/lib/supabase/client";
 
 interface SearchResult {
   id: string;
@@ -33,19 +33,10 @@ const navResults: SearchResult[] = navGroups.flatMap((group) =>
   })),
 );
 
-const resourceResults: SearchResult[] = resources.map((resource) => ({
-  id: resource.id,
-  label: resource.title,
-  description: `${resource.category} · ${resource.authorName}`,
-  href: "/dashboard",
-  icon: FileText,
-}));
-
-const allResults = [...navResults, ...resourceResults];
-
 export function SearchCommand() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [resourceResults, setResourceResults] = useState<SearchResult[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -60,18 +51,52 @@ export function SearchCommand() {
   }, []);
 
   useEffect(() => {
-    if (!open) setQuery("");
+    if (!open) {
+      setQuery("");
+      setResourceResults([]);
+    }
   }, [open]);
 
-  const results = useMemo(() => {
+  // Debounced live search of the resource table.
+  useEffect(() => {
+    const q = query.trim();
+    if (!q) {
+      setResourceResults([]);
+      return;
+    }
+    const supabase = createClient();
+    const handle = setTimeout(async () => {
+      const { data } = await supabase
+        .from("resources")
+        .select("id, title, category, author_name")
+        .or(`title.ilike.%${q}%,description.ilike.%${q}%`)
+        .limit(6);
+      setResourceResults(
+        (data ?? []).map((r) => ({
+          id: r.id,
+          label: r.title,
+          description: `${r.category} · ${r.author_name}`,
+          href: "/explore",
+          icon: FileText,
+        })),
+      );
+    }, 200);
+    return () => clearTimeout(handle);
+  }, [query]);
+
+  const navMatches = useMemo(() => {
     if (!query.trim()) return navResults;
     const q = query.toLowerCase();
-    return allResults.filter(
+    return navResults.filter(
       (result) =>
         result.label.toLowerCase().includes(q) ||
         result.description.toLowerCase().includes(q),
     );
   }, [query]);
+
+  const results = query.trim()
+    ? [...navMatches, ...resourceResults]
+    : navResults;
 
   function handleSelect(href: string) {
     setOpen(false);

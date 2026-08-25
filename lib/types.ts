@@ -2,6 +2,19 @@ import type { LucideIcon } from "lucide-react";
 
 export type ResourceCategory = "Projects" | "Placement prep" | "Research";
 
+export const RESOURCE_CATEGORIES: ResourceCategory[] = [
+  "Projects",
+  "Placement prep",
+  "Research",
+];
+
+export interface ResourceFile {
+  id: string;
+  name: string;
+  url: string;
+  size: number | null;
+}
+
 export interface Resource {
   id: string;
   category: ResourceCategory;
@@ -11,8 +24,39 @@ export interface Resource {
   description: string;
   tags: string[];
   authorName: string;
+  authorId?: string | null;
   reusedCount: number;
+  externalUrl?: string | null;
+  files?: ResourceFile[];
+  createdAt?: string;
   saved?: boolean;
+}
+
+export interface TimelineEntry {
+  id: string;
+  resourceId: string;
+  resourceTitle: string;
+  category: ResourceCategory;
+  reuserName: string;
+  note: string | null;
+  createdAt: string;
+}
+
+export interface Contributor {
+  id: string;
+  name: string;
+  department: string | null;
+  avatarUrl: string | null;
+  contributionCount: number;
+  reuseImpact: number;
+}
+
+export interface ResourceFilters {
+  category?: ResourceCategory;
+  department?: string;
+  year?: number;
+  tag?: string;
+  query?: string;
 }
 
 export interface StatCardData {
